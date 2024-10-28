@@ -1,0 +1,105 @@
+{
+  "formFields": [
+    {
+      "key": "FULL_NAME",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "text",
+        "required": true,
+        "label": "Full Name",
+        "placeholder": "Enter your full name",
+        "summarySection": "PERSONAL_DETAILS"
+      }
+    },
+
+    {
+      "key": "EMAIL",
+      "type": "custom-input",
+      "hideExpression": "model.FULL_NAME === 'John Doe'",
+      "templateOptions": {
+        "type": "email",
+        "required": true,
+        "label": "Email Address",
+        "placeholder": "Enter your email",
+        "summarySection": "CONTACT_DETAILS"
+      }
+    },
+    {
+      "key": "AGE",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "email",
+        "required": true,
+        "label": "Age",
+        "placeholder": "Enter your age II ",
+        "summarySection": "CONTACT_DETAILS"
+      }
+    },
+    {
+      "key": "PHONE",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "tel",
+        "required": true,
+        "label": "Phone Number",
+        "placeholder": "Enter your phone number",
+        "summarySection": "CONTACT_DETAILS"
+      }
+    },
+    {
+      "key": "JOB_TITLE",
+      "type": "custom-select",
+      "templateOptions": {
+        "label": "Job Title",
+        "options": [
+          { "name": "Software Engineer", "value": "SOFTWARE_ENGINEER" },
+          { "name": "Product Manager", "value": "PRODUCT_MANAGER" },
+          { "name": "Designer", "value": "DESIGNER" },
+          { "name": "Other", "value": "OTHER" }
+        ],
+        "required": true,
+        "placeholder": "Select your job title",
+        "summarySection": "PROFESSIONAL_DETAILS"
+      }
+    },
+    {
+      "key": "START_DATE",
+      "type": "custom-date",
+      "templateOptions": {
+        "label": "Start Date",
+        "required": true,
+        "placeholder": "Select start date",
+        "summarySection": "PROFESSIONAL_DETAILS",
+        "summaryFormatting": {
+          "dateFormat": "MM/dd/yyyy",
+          "formatType": "DATE"
+        }
+      }
+    },
+    {
+      "key": "EMPLOYMENT_TYPE",
+      "type": "custom-radio",
+      "templateOptions": {
+        "label": "Employment Type",
+        "options": [
+          { "name": "Full Time", "value": "FULL_TIME" },
+          { "name": "Part Time", "value": "PART_TIME" },
+          { "name": "Contract", "value": "CONTRACT" }
+        ],
+        "required": true,
+        "summarySection": "PROFESSIONAL_DETAILS"
+      }
+    },
+    {
+      "key": "DESCRIPTION",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "text",
+        "label": "Additional Information",
+        "placeholder": "Enter any additional information",
+        "rows": 3,
+        "summarySection": "OTHER_DETAILS"
+      }
+    }
+  ]
+}
