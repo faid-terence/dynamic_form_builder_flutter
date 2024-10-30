@@ -109,5 +109,18 @@
         "summarySection": "OTHER_DETAILS"
       }
     }
+  ],
+  "mutuelleApplication": [
+    {
+      "key": "ID_NUMBER",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "text",
+        "required": true,
+        "label": "Head of Household ID Number",
+        "placeholder": "Enter your ID number",
+        "summarySection": "PERSONAL_DETAILS"
+      }
+    }
   ]
 }

@@ -164,7 +164,6 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
             );
           }),
           const SizedBox(height: 20),
-          MyCustomButton(text: "Submit", onPressed: _submitForm),
         ],
       ),
     );
@@ -209,18 +208,18 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          config.templateOptions.label,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium, // Set the text style as needed
-        ),
-        const SizedBox(height: 4),
+        Text(config.templateOptions.label,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            )),
+        const SizedBox(height: 12),
         TextFormField(
           decoration: InputDecoration(
-            hintText:
-                config.templateOptions.placeholder, // Placeholder as hint text
-            border: const OutlineInputBorder(),
+            hintText: config.templateOptions.placeholder,
+            border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12))),
           ),
           maxLines: config.templateOptions.rows ?? 1,
           keyboardType: _getKeyboardType(config.templateOptions.type),
