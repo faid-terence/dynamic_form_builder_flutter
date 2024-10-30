@@ -11,7 +11,6 @@
         "summarySection": "PERSONAL_DETAILS"
       }
     },
-
     {
       "key": "EMAIL",
       "type": "custom-input",
@@ -28,10 +27,10 @@
       "key": "AGE",
       "type": "custom-input",
       "templateOptions": {
-        "type": "email",
+        "type": "number",
         "required": true,
         "label": "Age",
-        "placeholder": "Enter your age II ",
+        "placeholder": "Enter your age",
         "summarySection": "CONTACT_DETAILS"
       }
     },
@@ -98,6 +97,15 @@
         "label": "Additional Information",
         "placeholder": "Enter any additional information",
         "rows": 3,
+        "summarySection": "OTHER_DETAILS"
+      }
+    },
+    {
+      "key": "COPY_OF_ID",
+      "type": "attachment",
+      "templateOptions": {
+        "label": "Copy of ID",
+        "required": true,
         "summarySection": "OTHER_DETAILS"
       }
     }
