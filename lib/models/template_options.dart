@@ -33,7 +33,7 @@ class TemplateOptions {
       type: json['type'] as String?,
       required: json['required'] as bool? ?? false,
       label: json['label'] as String,
-      // placeholder: json['placeholder'] as String,
+      placeholder: json['placeholder'] as String?,
       summarySection: json['summarySection'] as String,
       options: options,
       rows: json['rows'] as int?,
