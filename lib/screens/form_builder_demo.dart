@@ -67,7 +67,20 @@ class _FormBuilderDemoState extends State<FormBuilderDemo> {
           ),
         ],
       ),
-      drawer: Drawer(),
+      drawer: const Drawer(),
+      bottomNavigationBar: BottomNavigationBar(items: const [
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.work,
+          ),
+          label: 'Job Application',
+        ),
+        BottomNavigationBarItem(
+            icon: Icon(
+              Icons.account_balance,
+            ),
+            label: 'Mutuelle'),
+      ]),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : errorMessage != null

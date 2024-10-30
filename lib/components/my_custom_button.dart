@@ -11,7 +11,9 @@ class MyCustomButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.blue, borderRadius: BorderRadius.circular(8)),
+          color: Colors.grey,
+          borderRadius: BorderRadius.circular(12),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 18),
         child: Center(
           child: Text(
@@ -19,6 +21,7 @@ class MyCustomButton extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

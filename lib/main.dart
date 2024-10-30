@@ -1,4 +1,5 @@
 import 'package:dynamic_form_generator/screens/form_builder_demo.dart';
+import 'package:dynamic_form_generator/screens/mutuelle_application.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -20,7 +21,11 @@ class MyApp extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
-      home: const FormBuilderDemo(),
+      home: const MutuelleApplication(),
+      routes: {
+        "/ ": (context) => const FormBuilderDemo(),
+        "/mutuelle": (context) => const MutuelleApplication(),
+      },
     );
   }
 }
