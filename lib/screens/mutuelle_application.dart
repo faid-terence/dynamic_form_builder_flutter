@@ -48,6 +48,8 @@ class _MutuelleApplicationState extends State<MutuelleApplication> {
     }
   }
 
+  // validate the national ID
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,11 +105,11 @@ class _MutuelleApplicationState extends State<MutuelleApplication> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 50),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50),
                         child: Row(
                           children: [
-                            Text.rich(
+                            const Text.rich(
                               TextSpan(
                                 children: [
                                   TextSpan(
@@ -130,18 +132,22 @@ class _MutuelleApplicationState extends State<MutuelleApplication> {
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Text(
-                              "Edit",
-                              style: TextStyle(
-                                color: Colors.purple,
-                                fontSize: 16,
-                                decoration: TextDecoration.underline,
-                                decorationColor: Colors
-                                    .purple, // Sets underline color to match the text color
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/paymentMethods");
+                              },
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.purple,
+                                textStyle: const TextStyle(
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.purple,
+                                ),
                               ),
+                              child: const Text("Edit"),
                             ),
                           ],
                         ),
