@@ -1,5 +1,7 @@
 import 'package:dynamic_form_generator/screens/form_builder_demo.dart';
 import 'package:dynamic_form_generator/screens/mutuelle_application.dart';
+import 'package:dynamic_form_generator/screens/payment_methods.dart';
+import 'package:dynamic_form_generator/screens/user_payments.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -25,6 +27,8 @@ class MyApp extends StatelessWidget {
       routes: {
         "/ ": (context) => const FormBuilderDemo(),
         "/mutuelle": (context) => const MutuelleApplication(),
+        "/paymentMethods": (context) => const PaymentMethods(),
+        "/UserPayments": (context) => const UserPayments(),
       },
     );
   }

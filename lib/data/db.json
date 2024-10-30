@@ -122,5 +122,18 @@
         "summarySection": "PERSONAL_DETAILS"
       }
     }
+  ],
+  "paymentMethods": [
+    {
+      "key": "MOMO_PAYMENT",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "text",
+        "required": true,
+        "label": "Mobile Money Number",
+        "placeholder": "0780 000 000",
+        "summarySection": "PERSONAL_DETAILS"
+      }
+    }
   ]
 }
