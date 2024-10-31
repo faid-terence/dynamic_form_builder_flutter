@@ -154,7 +154,22 @@ class _MutuelleApplicationState extends State<MutuelleApplication> {
                       const SizedBox(
                         height: 20,
                       ),
-                      MyCustomButton(text: "Pay", onPressed: () {}),
+                      MyCustomButton(
+                          text: "Pay",
+                          onPressed: () {
+                            // show a snackbar with the payment confirmation and clear the form
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Payment successful!',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          }),
                     ],
                   ),
       ),

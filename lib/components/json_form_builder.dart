@@ -22,6 +22,8 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
 
   String? lastName;
   String? firstName;
+  String? nidValidationMessage;
+  String? ammountToPay;
 
   bool _evaluateHideExpression(String? hideExpression) {
     if (hideExpression == null || hideExpression.isEmpty) return false;
@@ -113,26 +115,19 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
     return Form(
       key: _formKey,
       child: Column(
-        children: [
-          ...widget.jsonFields.map((field) {
-            final config =
-                FormFieldConfig.fromJson(field as Map<String, dynamic>);
+        children: widget.jsonFields.map((field) {
+          final config =
+              FormFieldConfig.fromJson(field as Map<String, dynamic>);
 
-            if (_evaluateHideExpression(config.hideExpression)) {
-              return const SizedBox.shrink();
-            }
+          if (_evaluateHideExpression(config.hideExpression)) {
+            return const SizedBox.shrink();
+          }
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: _buildFormField(config),
-            );
-          }).toList(),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _submitForm,
-            child: const Text('Submit'),
-          ),
-        ],
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: _buildFormField(config),
+          );
+        }).toList(),
       ),
     );
   }
@@ -311,51 +306,98 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
   }
 
   Widget _buildNIDField(FormFieldConfig config) {
-    String? _validateNID(String? value) {
-      if (value == null || value.isEmpty)
-        return config.templateOptions.required
-            ? 'This field is required'
-            : null;
-      if (value.length != 16) return 'NID must be 16 digits';
-      if (value != '1200280054610074') return 'NID not valid';
+    void validateAndSubmitNID(String value) {
+      setState(() {
+        lastName = null;
+        firstName = null;
+        nidValidationMessage = null;
+      });
+
+      if (value.length != 16) {
+        setState(() {
+          nidValidationMessage = 'NID must be 16 digits';
+        });
+        return;
+      }
+
+      if (value != '1200280054610074') {
+        setState(() {
+          nidValidationMessage = 'NID not valid';
+        });
+        return;
+      }
 
       setState(() {
         lastName = "Faid";
         firstName = "JABO";
+        ammountToPay = "15000";
+        _formData[config.key] = value;
       });
 
-      return null;
+      widget.onSubmit(_formData);
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(config.templateOptions.label,
-            style: Theme.of(context).textTheme.bodyMedium),
+        Text(
+          config.templateOptions.label,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         const SizedBox(height: 4),
         TextFormField(
           decoration: InputDecoration(
             hintText: config.templateOptions.placeholder,
             border: const OutlineInputBorder(),
+            errorText: nidValidationMessage,
           ),
           keyboardType: TextInputType.number,
           maxLength: 16,
-          validator: _validateNID,
           onChanged: (value) {
-            setState(() {
-              lastName = null;
-              firstName = null;
-            });
-            _updateFormData(config.key, value);
-            _validateNID(value);
+            if (value.length == 16) {
+              validateAndSubmitNID(value);
+            } else {
+              setState(() {
+                lastName = null;
+                firstName = null;
+                ammountToPay = null;
+                nidValidationMessage = null;
+              });
+            }
           },
         ),
-        if (lastName != null && firstName != null)
+        if (lastName != null && firstName != null && ammountToPay != null)
           Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: Text(
-              'Last Name: $lastName, First Name: $firstName',
-              style: Theme.of(context).textTheme.bodyMedium,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Last Name: $lastName',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'First Name: $firstName',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 4),
+                Text.rich(
+                  TextSpan(
+                    text: 'Outstanding Amount: ',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '$ammountToPay',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
       ],
@@ -374,13 +416,6 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
         return TextInputType.phone;
       default:
         return TextInputType.text;
-    }
-  }
-
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      widget.onSubmit(_formData);
     }
   }
 }
