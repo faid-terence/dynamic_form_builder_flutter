@@ -157,17 +157,25 @@ class _MutuelleApplicationState extends State<MutuelleApplication> {
                             ),
                             MyCustomButton(
                               text: "Pay",
-                              onPressed: () {
-                                final formData = formProvider.formData;
-                                print('Submitting form data: $formData');
+                              onPressed: formProvider
+                                      .hasFieldValue('ammountToPay')
+                                  ? () {
+                                      final formData = formProvider.formData;
+                                      print('Submitting form data: $formData');
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Payment successful!'),
-                                    backgroundColor: Colors.green,
-                                  ),
-                                );
-                              },
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Payment successful!'),
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      );
+                                    }
+                                  : null,
+                              backgroundColor:
+                                  formProvider.hasFieldValue('ammountToPay')
+                                      ? Colors.purple
+                                      : Colors.grey,
                             ),
                           ],
                         );
