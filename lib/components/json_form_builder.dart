@@ -105,7 +105,28 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
                   ? 'This field is required'
                   : null,
               onChanged: (value) {
-                formState.updateFormData(config.key, value);
+                if (config.templateOptions.type == 'number') {
+                  // Handle numeric input
+                  if (value.isNotEmpty) {
+                    final numValue = double.tryParse(value);
+                    if (numValue != null) {
+                      // Update both form data and any special fields
+                      formState.updateFormData(config.key, numValue);
+                      if (config.key == 'ammountToPay') {
+                        formState.updateAmount(numValue);
+                      }
+                    }
+                  } else {
+                    // Clear the field if empty
+                    formState.updateFormData(config.key, null);
+                    if (config.key == 'ammountToPay') {
+                      formState.updateAmount(0);
+                    }
+                  }
+                } else {
+                  // Handle other input types
+                  formState.updateFormData(config.key, value);
+                }
               },
               initialValue: formState.getFieldValue(config.key)?.toString(),
             ),
@@ -230,17 +251,73 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
 
           if (value.length != 16) {
             formState.setNIDValidationError('NID must be 16 digits');
+            formState.updateFormData('nidValidated', false);
             return;
           }
 
           if (value != '1200280054610074') {
             formState.setNIDValidationError('NID not valid');
+            formState.updateFormData('nidValidated', false);
             return;
           }
 
-          formState.clearNIDValidationError();
-          formState.setNIDData(value);
-          widget.onSubmit(formState.formData);
+          // If we need a pop-up requesting the user to enter a name
+          if (value == '1200280054610074') {
+            String enteredName = ''; // Temporary variable to store name input
+
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Verification'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                        'Please enter one of the names of the owner of this ID number'),
+                    SizedBox(height: 10),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter the name',
+                      ),
+                      onChanged: (name) {
+                        enteredName =
+                            name; // Store the entered name in the variable
+                      },
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      if (enteredName.toLowerCase() == 'faid') {
+                        Navigator.of(context).pop();
+                        formState.clearNIDValidationError();
+                        formState.setNIDData(value);
+                        formState.updateFormData('nidValidated', true);
+                        widget.onSubmit(formState.formData);
+                      } else {
+                        // Show error message if name is incorrect
+                        formState.setNIDValidationError('Name not correct');
+                        formState.updateFormData('nidValidated', false);
+                      }
+                    },
+                    child:
+                        Text('Continue', style: TextStyle(color: Colors.white)),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.purple),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            formState.clearNIDValidationError();
+            formState.setNIDData(value);
+            formState.updateFormData('nidValidated', true);
+            widget.onSubmit(formState.formData);
+          }
         }
 
         return Column(
@@ -333,30 +410,37 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
 
     final formState = context.read<FormStateProvider>();
 
-    // Special case for AMOUNT_TO_PAY field
-    if (hideExpression == '!ID_NUMBER') {
-      // Hide if NID is not validated successfully
-      return formState.nidValidationMessage != null ||
-          formState.nidData == null;
-    }
-
-    final formData = formState.formData;
-
+    // Handle negated field validations
     if (hideExpression.startsWith('!')) {
       String fieldKey = hideExpression.substring(1);
-      final fieldValue = formData[fieldKey];
+      // Check for field validation status
+      if (formState.validationErrors.containsKey(fieldKey)) {
+        return true;
+      }
+
+      // Check if field data exists
+      if (!formState.hasFieldValue(fieldKey)) {
+        return true;
+      }
+
+      final fieldValue = formState.getFieldValue(fieldKey);
       return _evaluateNegation(fieldValue);
     }
 
-    if (hideExpression.contains('==='))
+    if (hideExpression.contains('===')) {
       return _evaluateEquality(hideExpression);
-    if (hideExpression.contains('!=='))
+    }
+    if (hideExpression.contains('!==')) {
       return _evaluateInequality(hideExpression);
-    if (hideExpression.contains('>'))
+    }
+    if (hideExpression.contains('>')) {
       return _evaluateGreaterThan(hideExpression);
-    if (hideExpression.contains('<')) return _evaluateLessThan(hideExpression);
+    }
+    if (hideExpression.contains('<')) {
+      return _evaluateLessThan(hideExpression);
+    }
 
-    final fieldValue = formData[hideExpression];
+    final fieldValue = formState.formData[hideExpression];
     return _evaluateSimpleValue(fieldValue);
   }
 
@@ -405,10 +489,12 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
   }
 
   dynamic _getExpressionValue(String expression) {
-    if (expression.startsWith("'") && expression.endsWith("'"))
+    if (expression.startsWith("'") && expression.endsWith("'")) {
       return expression.substring(1, expression.length - 1);
-    if (expression.startsWith('"') && expression.endsWith('"'))
+    }
+    if (expression.startsWith('"') && expression.endsWith('"')) {
       return expression.substring(1, expression.length - 1);
+    }
     if (double.tryParse(expression) != null) return double.parse(expression);
     if (expression == 'true') return true;
     if (expression == 'false') return false;

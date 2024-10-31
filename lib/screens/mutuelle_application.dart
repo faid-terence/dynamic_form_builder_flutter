@@ -155,27 +155,39 @@ class _MutuelleApplicationState extends State<MutuelleApplication> {
                             const SizedBox(
                               height: 20,
                             ),
-                            MyCustomButton(
-                              text: "Pay ${formProvider.ammountToPay}",
-                              onPressed: formProvider
-                                      .hasFieldValue('ammountToPay')
-                                  ? () {
-                                      final formData = formProvider.formData;
-                                      print('Submitting form data: $formData');
+                            Consumer<FormStateProvider>(
+                              builder: (context, formProvider, child) {
+                                final amount =
+                                    formProvider.getFieldValue('ammountToPay');
+                                return MyCustomButton(
+                                  text: amount != null
+                                      ? "Pay $amount Rwf"
+                                      : "Pay",
+                                  onPressed: amount != null
+                                      ? () {
+                                          final formData =
+                                              formProvider.formData;
+                                          print(
+                                              'Submitting form data: $formData');
 
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Payment successful!'),
-                                          backgroundColor: Colors.green,
-                                        ),
-                                      );
-                                    }
-                                  : null,
-                              backgroundColor:
-                                  formProvider.hasFieldValue('ammountToPay')
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content:
+                                                  Text('Payment successful!'),
+                                              backgroundColor: Colors.green,
+                                            ),
+                                          );
+
+                                          // clear the form data
+                                          formProvider.clearFormData();
+                                        }
+                                      : null,
+                                  backgroundColor: amount != null
                                       ? Colors.purple
                                       : Colors.grey,
+                                );
+                              },
                             ),
                           ],
                         );
