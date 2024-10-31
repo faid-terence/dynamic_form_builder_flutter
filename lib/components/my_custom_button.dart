@@ -4,8 +4,13 @@ class MyCustomButton extends StatelessWidget {
   final Function()? onPressed;
   final String text;
   final Color? backgroundColor;
+  final Color? textColor;
   const MyCustomButton(
-      {super.key, this.onPressed, required this.text, this.backgroundColor});
+      {super.key,
+      this.onPressed,
+      required this.text,
+      this.backgroundColor,
+      this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +25,8 @@ class MyCustomButton extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: textColor ?? Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),

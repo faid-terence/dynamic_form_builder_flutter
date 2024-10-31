@@ -154,5 +154,53 @@
       "lastName": "Kamana",
       "firstName": "Jean"
     }
+  ],
+  "vehicleRegistration": [
+    {
+      "key": "PLATE_NUMBER",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "text",
+        "required": true,
+        "label": "Plate Number",
+        "placeholder": "Enter your plate number",
+        "summarySection": "VEHICLE_DETAILS"
+      }
+    },
+    {
+      "key": "TIN_NUMBER",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "text",
+        "required": true,
+        "label": "TIN Number",
+        "placeholder": "Enter the tin for the vehicle",
+        "summarySection": "VEHICLE_DETAILS"
+      }
+    }
+  ],
+  "verificationCode": [
+    {
+      "key": "MOMO_PAYMENT",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "text",
+        "required": true,
+        "label": "Mobile Money Number",
+        "placeholder": "0780 000 000",
+        "summarySection": "PERSONAL_DETAILS"
+      }
+    },
+    {
+      "key": "VERIFICATION_CODE",
+      "type": "custom-input",
+      "templateOptions": {
+        "type": "text",
+        "required": true,
+        "label": "Verification Code",
+        "placeholder": "Enter your verification code",
+        "summarySection": "PERSONAL_DETAILS"
+      }
+    }
   ]
 }
