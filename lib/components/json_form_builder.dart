@@ -238,6 +238,7 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
             return;
           }
 
+          formState.clearNIDValidationError();
           formState.setNIDData(value);
           widget.onSubmit(formState.formData);
         }
@@ -265,6 +266,7 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
                   validateAndSubmitNID(value);
                 } else {
                   formState.clearNIDData();
+                  formState.setNIDValidationError('NID must be 16 digits');
                 }
               },
             ),
@@ -330,11 +332,12 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
     hideExpression = hideExpression.replaceAll('model.', '');
 
     final formState = context.read<FormStateProvider>();
-    
+
     // Special case for AMOUNT_TO_PAY field
     if (hideExpression == '!ID_NUMBER') {
       // Hide if NID is not validated successfully
-      return formState.nidValidationMessage != null || formState.nidData == null;
+      return formState.nidValidationMessage != null ||
+          formState.nidData == null;
     }
 
     final formData = formState.formData;
