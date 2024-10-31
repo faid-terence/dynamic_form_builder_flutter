@@ -156,7 +156,7 @@ class _MutuelleApplicationState extends State<MutuelleApplication> {
                               height: 20,
                             ),
                             MyCustomButton(
-                              text: "Pay",
+                              text: "Pay ${formProvider.ammountToPay}",
                               onPressed: formProvider
                                       .hasFieldValue('ammountToPay')
                                   ? () {

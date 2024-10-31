@@ -8,7 +8,7 @@ class JsonFormBuilder extends StatefulWidget {
   final List<dynamic> jsonFields;
   final Function(Map<String, dynamic>) onSubmit;
 
-  JsonFormBuilder({
+  const JsonFormBuilder({
     super.key,
     required this.jsonFields,
     required this.onSubmit,
