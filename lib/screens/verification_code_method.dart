@@ -129,20 +129,6 @@ class _VerificationCodeMethodState extends State<VerificationCodeMethod> {
                       MaterialPageRoute(
                           builder: (context) => const AddedVehicles()));
                 }),
-            const Spacer(),
-            Center(
-              child: TextButton(
-                onPressed: () {},
-                child: const Text(
-                  "Skip this step",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            )
           ],
         ),
       ),

@@ -1,5 +1,4 @@
 import 'package:dynamic_form_generator/components/json_form_builder.dart';
-import 'package:dynamic_form_generator/components/my_custom_button.dart';
 import 'package:dynamic_form_generator/components/primary_button.dart';
 import 'package:dynamic_form_generator/components/transparent_button.dart';
 import 'package:dynamic_form_generator/screens/setup_payment_methods.dart';

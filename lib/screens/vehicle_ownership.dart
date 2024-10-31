@@ -1,4 +1,6 @@
+import 'package:dynamic_form_generator/components/skip_alert.dart';
 import 'package:dynamic_form_generator/screens/vehicle_registration.dart';
+import 'package:dynamic_form_generator/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 class VehicleOwnership extends StatelessWidget {
@@ -118,7 +120,20 @@ class VehicleOwnership extends StatelessWidget {
             const Spacer(),
             Center(
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => SkipAlert(
+                      onSkip: () {
+                        // Go back to welcome screen
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const WelcomeScreen()));
+                      },
+                    ),
+                  );
+                },
                 child: const Text(
                   "Skip this step",
                   style: TextStyle(
