@@ -122,6 +122,18 @@
         "summarySection": "PERSONAL_DETAILS",
         "expressionProperties": {}
       }
+    },
+    {
+      "key": "AMOUNT_TO_PAY",
+      "type": "custom-input",
+      "hideExpression": "!model.ID_NUMBER",
+      "templateOptions": {
+        "type": "number",
+        "required": true,
+        "label": "Amount to Pay",
+        "placeholder": "Enter the amount to pay",
+        "summarySection": "PAYMENT_DETAILS"
+      }
     }
   ],
   "paymentMethods": [
