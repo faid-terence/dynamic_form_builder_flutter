@@ -83,14 +83,14 @@ class WelcomeScreen extends StatelessWidget {
                 icon: FontAwesomeIcons.handHolding,
                 color: Colors.blue,
                 onTap: () {
-                  Navigator.pushNamed(context, "/mutuelle");
+                  Navigator.pushNamed(context, "/makePayments");
                 },
               ),
               const SizedBox(height: 20),
 
               const CardComponent(
-                title: "Make Paytment",
-                subtitle: "Traffic fines, community health based insurance",
+                title: "My certificates",
+                subtitle: "Birth certificate, celibacy certificate and more ",
                 // use coins hand icon
                 icon: FontAwesomeIcons.fileAlt,
                 color: Color(0xFF8413F5),
