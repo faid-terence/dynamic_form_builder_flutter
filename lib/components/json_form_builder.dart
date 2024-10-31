@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:dynamic_form_generator/models/form_field.dart';
+import 'package:provider/provider.dart';
+import 'package:dynamic_form_generator/provider/form_state_provider.dart';
 
 class JsonFormBuilder extends StatefulWidget {
   final List<dynamic> jsonFields;
@@ -20,96 +22,6 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
   final _formKey = GlobalKey<FormState>();
   final Map<String, dynamic> _formData = {};
 
-  String? lastName;
-  String? firstName;
-  String? nidValidationMessage;
-  String? ammountToPay;
-
-  bool _evaluateHideExpression(String? hideExpression) {
-    if (hideExpression == null || hideExpression.isEmpty) return false;
-    hideExpression = hideExpression.replaceAll('model.', '');
-
-    if (hideExpression.startsWith('!')) {
-      String fieldKey = hideExpression.substring(1);
-      final fieldValue = _formData[fieldKey];
-      return _evaluateNegation(fieldValue);
-    }
-
-    if (hideExpression.contains('==='))
-      return _evaluateEquality(hideExpression);
-    if (hideExpression.contains('!=='))
-      return _evaluateInequality(hideExpression);
-    if (hideExpression.contains('>'))
-      return _evaluateGreaterThan(hideExpression);
-    if (hideExpression.contains('<')) return _evaluateLessThan(hideExpression);
-
-    final fieldValue = _formData[hideExpression];
-    return _evaluateSimpleValue(fieldValue);
-  }
-
-  bool _evaluateNegation(dynamic fieldValue) {
-    if (fieldValue == null) return true;
-    if (fieldValue is bool) return !fieldValue;
-    if (fieldValue is String) return fieldValue.isEmpty;
-    if (fieldValue is num) return fieldValue == 0;
-    return true;
-  }
-
-  bool _evaluateEquality(String expression) {
-    final parts = expression.split('===').map((e) => e.trim()).toList();
-    if (parts.length != 2) return false;
-
-    final leftSide = _getExpressionValue(parts[0]);
-    final rightSide = _getExpressionValue(parts[1]);
-    return leftSide == rightSide;
-  }
-
-  bool _evaluateInequality(String expression) {
-    final parts = expression.split('!==').map((e) => e.trim()).toList();
-    if (parts.length != 2) return false;
-
-    final leftSide = _getExpressionValue(parts[0]);
-    final rightSide = _getExpressionValue(parts[1]);
-    return leftSide != rightSide;
-  }
-
-  bool _evaluateGreaterThan(String expression) {
-    final parts = expression.split('>').map((e) => e.trim()).toList();
-    if (parts.length != 2) return false;
-
-    final leftSide = _getExpressionValue(parts[0]);
-    final rightSide = _getExpressionValue(parts[1]);
-    return leftSide is num && rightSide is num && leftSide > rightSide;
-  }
-
-  bool _evaluateLessThan(String expression) {
-    final parts = expression.split('<').map((e) => e.trim()).toList();
-    if (parts.length != 2) return false;
-
-    final leftSide = _getExpressionValue(parts[0]);
-    final rightSide = _getExpressionValue(parts[1]);
-    return leftSide is num && rightSide is num && leftSide < rightSide;
-  }
-
-  dynamic _getExpressionValue(String expression) {
-    if (expression.startsWith("'") && expression.endsWith("'"))
-      return expression.substring(1, expression.length - 1);
-    if (expression.startsWith('"') && expression.endsWith('"'))
-      return expression.substring(1, expression.length - 1);
-    if (double.tryParse(expression) != null) return double.parse(expression);
-    if (expression == 'true') return true;
-    if (expression == 'false') return false;
-    return _formData[expression];
-  }
-
-  bool _evaluateSimpleValue(dynamic fieldValue) {
-    if (fieldValue == null) return false;
-    if (fieldValue is bool) return fieldValue;
-    if (fieldValue is String) return fieldValue.isNotEmpty;
-    if (fieldValue is num) return fieldValue != 0;
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -119,7 +31,7 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
           final config =
               FormFieldConfig.fromJson(field as Map<String, dynamic>);
 
-          if (_evaluateHideExpression(config.hideExpression)) {
+          if (_evaluateHideExpression(config.hideExpression, context)) {
             return const SizedBox.shrink();
           }
 
@@ -133,10 +45,9 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
   }
 
   Widget _buildFormField(FormFieldConfig config) {
-    return ValueListenableBuilder<Map<String, dynamic>>(
-      valueListenable: _getFormDataNotifier(),
-      builder: (context, _, __) {
-        if (_evaluateHideExpression(config.hideExpression)) {
+    return Consumer<FormStateProvider>(
+      builder: (context, formState, _) {
+        if (_evaluateHideExpression(config.hideExpression, context)) {
           return const SizedBox.shrink();
         }
 
@@ -170,31 +81,37 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
   }
 
   Widget _buildTextFormField(FormFieldConfig config) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(config.templateOptions.label,
-            style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-                fontWeight: FontWeight.bold)),
-        const SizedBox(height: 12),
-        TextFormField(
-          decoration: InputDecoration(
-            hintText: config.templateOptions.placeholder,
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12))),
-          ),
-          maxLines: config.templateOptions.rows ?? 1,
-          keyboardType: _getKeyboardType(config.templateOptions.type),
-          validator: (value) => config.templateOptions.required &&
-                  (value == null || value.isEmpty)
-              ? 'This field is required'
-              : null,
-          onChanged: (value) => _updateFormData(config.key, value),
-          onSaved: (value) => _formData[config.key] = value,
-        ),
-      ],
+    return Consumer<FormStateProvider>(
+      builder: (context, formState, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(config.templateOptions.label,
+                style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: config.templateOptions.placeholder,
+                border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12))),
+              ),
+              maxLines: config.templateOptions.rows ?? 1,
+              keyboardType: _getKeyboardType(config.templateOptions.type),
+              validator: (value) => config.templateOptions.required &&
+                      (value == null || value.isEmpty)
+                  ? 'This field is required'
+                  : null,
+              onChanged: (value) {
+                formState.updateFormData(config.key, value);
+              },
+              initialValue: formState.getFieldValue(config.key)?.toString(),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -306,101 +223,90 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
   }
 
   Widget _buildNIDField(FormFieldConfig config) {
-    void validateAndSubmitNID(String value) {
-      setState(() {
-        lastName = null;
-        firstName = null;
-        nidValidationMessage = null;
-      });
+    return Consumer<FormStateProvider>(
+      builder: (context, formState, _) {
+        void validateAndSubmitNID(String value) {
+          formState.updateFormData(config.key, value);
 
-      if (value.length != 16) {
-        setState(() {
-          nidValidationMessage = 'NID must be 16 digits';
-        });
-        return;
-      }
+          if (value.length != 16) {
+            formState.setNIDValidationError('NID must be 16 digits');
+            return;
+          }
 
-      if (value != '1200280054610074') {
-        setState(() {
-          nidValidationMessage = 'NID not valid';
-        });
-        return;
-      }
+          if (value != '1200280054610074') {
+            formState.setNIDValidationError('NID not valid');
+            return;
+          }
 
-      setState(() {
-        lastName = "Faid";
-        firstName = "JABO";
-        ammountToPay = "15000";
-        _formData[config.key] = value;
-      });
+          formState.setNIDData(value);
+          widget.onSubmit(formState.formData);
+        }
 
-      widget.onSubmit(_formData);
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          config.templateOptions.label,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        const SizedBox(height: 4),
-        TextFormField(
-          decoration: InputDecoration(
-            hintText: config.templateOptions.placeholder,
-            border: const OutlineInputBorder(),
-            errorText: nidValidationMessage,
-          ),
-          keyboardType: TextInputType.number,
-          maxLength: 16,
-          onChanged: (value) {
-            if (value.length == 16) {
-              validateAndSubmitNID(value);
-            } else {
-              setState(() {
-                lastName = null;
-                firstName = null;
-                ammountToPay = null;
-                nidValidationMessage = null;
-              });
-            }
-          },
-        ),
-        if (lastName != null && firstName != null && ammountToPay != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Last Name: $lastName',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'First Name: $firstName',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 4),
-                Text.rich(
-                  TextSpan(
-                    text: 'Outstanding Amount: ',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '$ammountToPay',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              config.templateOptions.label,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-          ),
-      ],
+            const SizedBox(height: 4),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: config.templateOptions.placeholder,
+                border: const OutlineInputBorder(),
+                errorText: formState.nidValidationMessage,
+              ),
+              keyboardType: TextInputType.number,
+              maxLength: 16,
+              onChanged: (value) {
+                formState.updateFormData(config.key, value);
+
+                if (value.length == 16) {
+                  validateAndSubmitNID(value);
+                } else {
+                  formState.clearNIDData();
+                }
+              },
+            ),
+            if (formState.lastName != null &&
+                formState.firstName != null &&
+                formState.ammountToPay != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Last Name: ${formState.lastName}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'First Name: ${formState.firstName}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text.rich(
+                      TextSpan(
+                        text: 'Outstanding Amount: ',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '${formState.ammountToPay}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -417,5 +323,102 @@ class _JsonFormBuilderState extends State<JsonFormBuilder> {
       default:
         return TextInputType.text;
     }
+  }
+
+  bool _evaluateHideExpression(String? hideExpression, BuildContext context) {
+    if (hideExpression == null || hideExpression.isEmpty) return false;
+    hideExpression = hideExpression.replaceAll('model.', '');
+
+    final formState = context.read<FormStateProvider>();
+    
+    // Special case for AMOUNT_TO_PAY field
+    if (hideExpression == '!ID_NUMBER') {
+      // Hide if NID is not validated successfully
+      return formState.nidValidationMessage != null || formState.nidData == null;
+    }
+
+    final formData = formState.formData;
+
+    if (hideExpression.startsWith('!')) {
+      String fieldKey = hideExpression.substring(1);
+      final fieldValue = formData[fieldKey];
+      return _evaluateNegation(fieldValue);
+    }
+
+    if (hideExpression.contains('==='))
+      return _evaluateEquality(hideExpression);
+    if (hideExpression.contains('!=='))
+      return _evaluateInequality(hideExpression);
+    if (hideExpression.contains('>'))
+      return _evaluateGreaterThan(hideExpression);
+    if (hideExpression.contains('<')) return _evaluateLessThan(hideExpression);
+
+    final fieldValue = formData[hideExpression];
+    return _evaluateSimpleValue(fieldValue);
+  }
+
+  bool _evaluateNegation(dynamic fieldValue) {
+    if (fieldValue == null) return true;
+    if (fieldValue is bool) return !fieldValue;
+    if (fieldValue is String) return fieldValue.isEmpty;
+    if (fieldValue is num) return fieldValue == 0;
+    return true;
+  }
+
+  bool _evaluateEquality(String expression) {
+    final parts = expression.split('===').map((e) => e.trim()).toList();
+    if (parts.length != 2) return false;
+
+    final leftSide = _getExpressionValue(parts[0]);
+    final rightSide = _getExpressionValue(parts[1]);
+    return leftSide == rightSide;
+  }
+
+  bool _evaluateInequality(String expression) {
+    final parts = expression.split('!==').map((e) => e.trim()).toList();
+    if (parts.length != 2) return false;
+
+    final leftSide = _getExpressionValue(parts[0]);
+    final rightSide = _getExpressionValue(parts[1]);
+    return leftSide != rightSide;
+  }
+
+  bool _evaluateGreaterThan(String expression) {
+    final parts = expression.split('>').map((e) => e.trim()).toList();
+    if (parts.length != 2) return false;
+
+    final leftSide = _getExpressionValue(parts[0]);
+    final rightSide = _getExpressionValue(parts[1]);
+    return leftSide is num && rightSide is num && leftSide > rightSide;
+  }
+
+  bool _evaluateLessThan(String expression) {
+    final parts = expression.split('<').map((e) => e.trim()).toList();
+    if (parts.length != 2) return false;
+
+    final leftSide = _getExpressionValue(parts[0]);
+    final rightSide = _getExpressionValue(parts[1]);
+    return leftSide is num && rightSide is num && leftSide < rightSide;
+  }
+
+  dynamic _getExpressionValue(String expression) {
+    if (expression.startsWith("'") && expression.endsWith("'"))
+      return expression.substring(1, expression.length - 1);
+    if (expression.startsWith('"') && expression.endsWith('"'))
+      return expression.substring(1, expression.length - 1);
+    if (double.tryParse(expression) != null) return double.parse(expression);
+    if (expression == 'true') return true;
+    if (expression == 'false') return false;
+
+    final formData = context.read<FormStateProvider>().formData;
+    return formData[expression];
+  }
+
+  bool _evaluateSimpleValue(dynamic fieldValue) {
+    if (fieldValue == null) return false;
+    if (fieldValue is bool) return fieldValue;
+    if (fieldValue is String) return fieldValue.isNotEmpty;
+    if (fieldValue is num) return fieldValue != 0;
+    return false;
   }
 }

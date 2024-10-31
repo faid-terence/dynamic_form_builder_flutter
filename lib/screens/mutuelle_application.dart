@@ -3,6 +3,8 @@ import 'package:dynamic_form_generator/components/my_custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:provider/provider.dart';
+import 'package:dynamic_form_generator/provider/form_state_provider.dart';
 
 class MutuelleApplication extends StatefulWidget {
   const MutuelleApplication({super.key});
@@ -51,127 +53,127 @@ class _MutuelleApplicationState extends State<MutuelleApplication> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mutuelle de santé'),
-        foregroundColor: Colors.black,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: Colors.grey.shade300,
-            height: 1.0,
+    return ChangeNotifierProvider(
+      create: (_) => FormStateProvider(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Mutuelle de santé'),
+          foregroundColor: Colors.black,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1.0),
+            child: Container(
+              color: Colors.grey.shade300,
+              height: 1.0,
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(25),
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : errorMessage != null
-                ? Center(
-                    child: Text(
-                      errorMessage!,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: Text(
-                          'Provide the following details',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Color(0xFF666666),
-                            fontWeight: FontWeight.normal,
-                          ),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                      JsonFormBuilder(
-                        jsonFields: formFields!,
-                        onSubmit: (data) {
-                          print(data);
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 50),
-                        child: Row(
+        body: Padding(
+          padding: const EdgeInsets.all(25),
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : errorMessage != null
+                  ? Center(child: Text(errorMessage!))
+                  : Consumer<FormStateProvider>(
+                      builder: (context, formProvider, child) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text.rich(
-                              TextSpan(
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 20),
+                              child: Text(
+                                'Provide the following details',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFF666666),
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                            JsonFormBuilder(
+                              jsonFields: formFields!,
+                              onSubmit: (data) {},
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 50),
+                              child: Row(
                                 children: [
-                                  TextSpan(
-                                    text: "Pay with: ",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xFF666666),
-                                      fontWeight: FontWeight.normal,
+                                  const Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Pay with: ",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(0xFF666666),
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "0780 000 000",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight
+                                                .bold, // Makes the number bold
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  TextSpan(
-                                    text: "0780 000 000",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight
-                                          .bold, // Makes the number bold
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, "/paymentMethods");
+                                    },
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.purple,
+                                      textStyle: const TextStyle(
+                                        fontSize: 16,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: Colors.purple,
+                                      ),
                                     ),
+                                    child: const Text("Edit"),
                                   ),
                                 ],
                               ),
                             ),
                             const SizedBox(
-                              width: 10,
+                              height: 20,
                             ),
-                            TextButton(
+                            MyCustomButton(
+                              text: "Pay",
                               onPressed: () {
-                                Navigator.pushNamed(context, "/paymentMethods");
+                                final formData = formProvider.formData;
+                                print('Submitting form data: $formData');
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Payment successful!'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
                               },
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.purple,
-                                textStyle: const TextStyle(
-                                  fontSize: 16,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.purple,
-                                ),
-                              ),
-                              child: const Text("Edit"),
                             ),
                           ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      MyCustomButton(
-                          text: "Pay",
-                          onPressed: () {
-                            // show a snackbar with the payment confirmation and clear the form
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Payment successful!',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          }),
-                    ],
-                  ),
+                        );
+                      },
+                    ),
+        ),
       ),
     );
   }
