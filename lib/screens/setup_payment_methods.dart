@@ -1,6 +1,5 @@
 import 'package:dynamic_form_generator/components/json_form_builder.dart';
 import 'package:dynamic_form_generator/components/primary_button.dart';
-import 'package:dynamic_form_generator/screens/added_vehicles.dart';
 import 'package:dynamic_form_generator/screens/verification_code_method.dart';
 import 'package:dynamic_form_generator/services/payment_method_services.dart';
 import 'package:flutter/material.dart';
@@ -136,20 +135,6 @@ class _SetupPaymentMethodsState extends State<SetupPaymentMethods> {
                           builder: (context) =>
                               const VerificationCodeMethod()));
                 }),
-            const Spacer(),
-            Center(
-              child: TextButton(
-                onPressed: () {},
-                child: const Text(
-                  "Skip this step",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            )
           ],
         ),
       ),
