@@ -32,7 +32,6 @@ class _MutuelleApplicationState extends State<MutuelleApplication> {
           formFields =
               data.map((field) => field as Map<String, dynamic>).toList();
           isLoading = false;
-          print(formFields);
         });
       } else {
         setState(() {
