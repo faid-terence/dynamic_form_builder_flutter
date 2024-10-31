@@ -1,4 +1,5 @@
 import 'package:dynamic_form_generator/screens/form_builder_demo.dart';
+import 'package:dynamic_form_generator/screens/make_payments.dart';
 import 'package:dynamic_form_generator/screens/mutuelle_application.dart';
 import 'package:dynamic_form_generator/screens/payment_methods.dart';
 import 'package:dynamic_form_generator/screens/user_payments.dart';
@@ -6,11 +7,15 @@ import 'package:dynamic_form_generator/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dynamic_form_generator/provider/form_state_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:dynamic_form_generator/provider/services_provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => FormStateProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FormStateProvider()),
+        ChangeNotifierProvider(create: (_) => ServicesProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -37,6 +42,7 @@ class MyApp extends StatelessWidget {
         "/mutuelle": (context) => const MutuelleApplication(),
         "/paymentMethods": (context) => const PaymentMethods(),
         "/UserPayments": (context) => const UserPayments(),
+        "/makePayments": (context) => const MakePayments(),
       },
     );
   }

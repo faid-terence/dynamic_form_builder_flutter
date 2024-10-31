@@ -1,5 +1,5 @@
 import 'package:dynamic_form_generator/components/json_form_builder.dart';
-import 'package:dynamic_form_generator/components/my_custom_button.dart';
+
 import 'package:dynamic_form_generator/components/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -49,34 +49,31 @@ class _PaymentMethodsState extends State<PaymentMethods> {
     }
   }
 
-  // Function to display the success message and navigate after a delay
   void saveNumber() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           decoration: BoxDecoration(
-            color: Colors.green.shade600, // Set the background color to green
-            borderRadius: BorderRadius.circular(8), // Rounded corners
+            color: Colors.green.shade600,
+            borderRadius: BorderRadius.circular(8),
           ),
           child: const Text(
             '"Number" saved successfully',
             style: TextStyle(
-              color: Colors.white, // Text color to contrast with background
+              color: Colors.white,
               fontSize: 16,
             ),
             textAlign: TextAlign.center,
           ),
         ),
-        backgroundColor:
-            Colors.transparent, // Makes the default background transparent
-        elevation: 0, // Removes the shadow for a flat look
-        behavior: SnackBarBehavior.floating, // Floating style
-        duration: const Duration(seconds: 2), // Duration to show the message
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
       ),
     );
 
-    // Delay for 3 seconds and then navigate to UserPayments
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushNamed(context, "/UserPayments");
     });
