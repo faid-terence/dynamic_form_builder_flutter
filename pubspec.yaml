@@ -38,6 +38,7 @@ dependencies:
   http:
   file_picker:
   provider:
+  font_awesome_flutter:
 
 dev_dependencies:
   flutter_test:
