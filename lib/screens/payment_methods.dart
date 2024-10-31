@@ -1,133 +1,92 @@
 import 'package:dynamic_form_generator/components/json_form_builder.dart';
-
 import 'package:dynamic_form_generator/components/primary_button.dart';
+import 'package:dynamic_form_generator/view_models/payment_methods_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:provider/provider.dart';
 
-class PaymentMethods extends StatefulWidget {
+class PaymentMethods extends StatelessWidget {
   const PaymentMethods({super.key});
 
   @override
-  State<PaymentMethods> createState() => _PaymentMethodsState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => PaymentMethodsViewModel()..loadPaymentMethods(),
+      child: const PaymentMethodsView(),
+    );
+  }
 }
 
-class _PaymentMethodsState extends State<PaymentMethods> {
-  List<Map<String, dynamic>>? formFields;
-  bool isLoading = true;
-  String? errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchFormFields();
-  }
-
-  Future _fetchFormFields() async {
-    try {
-      final response =
-          await http.get(Uri.parse('http://localhost:3000/paymentMethods'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as List;
-        setState(() {
-          formFields =
-              data.map((field) => field as Map<String, dynamic>).toList();
-          isLoading = false;
-          print(formFields);
-        });
-      } else {
-        setState(() {
-          errorMessage = 'Failed to load form fields. Please try again.';
-          isLoading = false;
-        });
-      }
-    } catch (error) {
-      setState(() {
-        errorMessage = 'An error occurred: $error';
-        isLoading = false;
-      });
-    }
-  }
-
-  void saveNumber() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          decoration: BoxDecoration(
-            color: Colors.green.shade600,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Text(
-            '"Number" saved successfully',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushNamed(context, "/UserPayments");
-    });
-  }
+class PaymentMethodsView extends StatelessWidget {
+  const PaymentMethodsView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Payment Methods'),
-        foregroundColor: Colors.black,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: Colors.grey.shade300,
-            height: 1.0,
-          ),
+      appBar: _buildAppBar(context),
+      body: _buildBody(context),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text('Payment Methods'),
+      foregroundColor: Colors.black,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios),
+        onPressed: () => Navigator.pop(context),
+      ),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1.0),
+        child: Container(
+          color: Colors.grey.shade300,
+          height: 1.0,
         ),
       ),
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : errorMessage != null
-              ? Center(
-                  child: Text(errorMessage!),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(25),
-                  child: Column(
-                    children: [
-                      JsonFormBuilder(
-                        jsonFields: formFields!,
-                        onSubmit: (data) {
-                          print(data);
-                        },
-                      ),
-                      const Text(
-                        "This is the number that will be used to pay. It can be MTN or Airtel Mobile Money",
-                      ),
-                      const SizedBox(height: 40),
-                      PrimaryButton(
-                        text: "Save Number",
-                        onPressed: saveNumber,
-                      ),
-                    ],
-                  ),
-                ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return Consumer<PaymentMethodsViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (viewModel.errorMessage != null) {
+          return Center(child: Text(viewModel.errorMessage!));
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            children: [
+              _buildForm(viewModel),
+              const Text(
+                "This is the number that will be used to pay. It can be MTN or Airtel Mobile Money",
+              ),
+              const SizedBox(height: 40),
+              _buildSaveButton(context, viewModel),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildForm(PaymentMethodsViewModel viewModel) {
+    return JsonFormBuilder(
+      jsonFields: viewModel.formFields!,
+      onSubmit: (data) {
+        print(data);
+      },
+    );
+  }
+
+  Widget _buildSaveButton(
+      BuildContext context, PaymentMethodsViewModel viewModel) {
+    return PrimaryButton(
+      text: "Save Number",
+      onPressed: () => viewModel.saveNumber(context),
     );
   }
 }
