@@ -37,6 +37,7 @@ dependencies:
   intl:
   http:
   file_picker:
+  provider:
 
 dev_dependencies:
   flutter_test:
