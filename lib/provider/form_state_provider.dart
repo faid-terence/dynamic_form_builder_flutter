@@ -53,11 +53,30 @@ class FormStateProvider extends ChangeNotifier {
     _nidData = nid;
     _formData['lastName'] = "Faid";
     _formData['firstName'] = "JABO";
-    _formData['ammountToPay'] = "15000";
+    _formData['ammountToPay'] = 15000.0;
     _formData['nid'] = nid;
     firstName = 'John';
     lastName = 'Doe';
-    ammountToPay = 15000;
+    ammountToPay = 15000.0;
+    notifyListeners();
+  }
+
+  void updateAmount(double amount) {
+    ammountToPay = amount;
+    _formData['ammountToPay'] = amount;
+    notifyListeners();
+  }
+
+  void clearFormDataAndNID() {
+    _formData.clear();
+    _nidData = null;
+    notifyListeners();
+  }
+
+  final Map<String, String> validationErrors = {};
+
+  void clearFormData() {
+    formData.clear();
     notifyListeners();
   }
 }

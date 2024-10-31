@@ -126,7 +126,7 @@
     {
       "key": "AMOUNT_TO_PAY",
       "type": "custom-input",
-      "hideExpression": "!model.ID_NUMBER",
+      "hideExpression": "model.ID_NUMBER !== '1200280054610074'",
       "templateOptions": {
         "type": "number",
         "required": true,
