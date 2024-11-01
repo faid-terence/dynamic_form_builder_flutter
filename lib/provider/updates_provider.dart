@@ -1,5 +1,6 @@
+import 'dart:ui';
 import 'package:dynamic_form_generator/models/updates.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class UpdatesProvider extends ChangeNotifier {
   static List<Updates> updates = [
