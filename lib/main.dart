@@ -1,3 +1,4 @@
+import 'package:dynamic_form_generator/provider/updates_provider.dart';
 import 'package:dynamic_form_generator/screens/form_builder_demo.dart';
 import 'package:dynamic_form_generator/screens/make_payments.dart';
 import 'package:dynamic_form_generator/screens/mutuelle_application.dart';
@@ -15,6 +16,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => FormStateProvider()),
         ChangeNotifierProvider(create: (_) => ServicesProvider()),
+        ChangeNotifierProvider(create: (_) => UpdatesProvider()),
       ],
       child: const MyApp(),
     ),
