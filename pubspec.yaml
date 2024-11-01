@@ -40,6 +40,7 @@ dependencies:
   provider:
   font_awesome_flutter:
   badges:
+  chat_bubbles:
 
 dev_dependencies:
   flutter_test:
