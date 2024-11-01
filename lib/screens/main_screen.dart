@@ -78,12 +78,14 @@ class MainScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              const CardComponent(
+              CardComponent(
                 title: "My certificates",
                 subtitle: "Birth certificate, celibacy certificate and more ",
-                // use coins hand icon
                 icon: FontAwesomeIcons.fileAlt,
                 color: Color(0xFF8413F5),
+                onTap: () {
+                  Navigator.pushNamed(context, "/certificates");
+                },
               )
             ],
           ),

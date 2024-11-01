@@ -15,31 +15,35 @@ class ListOfPayments extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(25),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // number
-          Text.rich(
-            TextSpan(
-              text: number,
-              style: TextStyle(fontWeight: FontWeight.bold),
-              children: const [
-                // space
-                TextSpan(
-                  text: ' ',
-                  style: TextStyle(fontWeight: FontWeight.normal),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey.shade300),
                 ),
+              ),
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text.rich(
                 TextSpan(
-                  text: '0780 000 000',
-                  style: TextStyle(fontWeight: FontWeight.normal),
+                  text: number,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  children: const [
+                    TextSpan(
+                      text: ' ',
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                    TextSpan(
+                      text: '0780 000 000',
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-
           Row(
             children: [
               IconButton(
