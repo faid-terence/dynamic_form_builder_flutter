@@ -20,26 +20,28 @@ class _PdfViewTerenceState extends State<PdfViewTerence> {
         title: "PDF Viewer",
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: _isFullView
-                  ? () {
-                      setState(() {
-                        _isFullView = false;
-                      });
-                    }
-                  : null,
-              child: Builder(builder: (context) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
+        padding: const EdgeInsets.all(16),
+        child: Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: _isFullView
+                    ? () {
+                        setState(() {
+                          _isFullView = false;
+                        });
+                      }
+                    : null,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
                   ),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
+                  child: SizedBox(
                     height: _isFullView
                         ? MediaQuery.of(context).size.height - 100
                         : 300,
@@ -49,54 +51,66 @@ class _PdfViewTerenceState extends State<PdfViewTerence> {
                       initialZoomLevel: _isFullView ? 1 : 0.75,
                     ),
                   ),
-                );
-              }),
-            ),
-            if (!_isFullView)
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _isFullView = true;
-                  });
-                },
-                style: TextButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color:
-                            Colors.purple.shade100, // Light purple background
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        FontAwesomeIcons.filePdf,
-                        color: Colors.purple, // Purple icon color
+              ),
+              if (!_isFullView)
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.grey.shade200,
+                        width: 1,
                       ),
                     ),
-                    const SizedBox(width: 12), // Space between icon and text
-                    const Expanded(
-                      child: Text(
-                        "Birth certificate/01/2024.pdf",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black87,
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isFullView = true;
+                      });
+                    },
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25),
                         ),
                       ),
                     ),
-                  ],
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.purple.shade100,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            FontAwesomeIcons.filePdf,
+                            color: Colors.purple,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            "Birth certificate/01/2024.pdf",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              )
-          ],
+            ],
+          ),
         ),
       ),
     );
