@@ -41,7 +41,9 @@ dependencies:
   font_awesome_flutter:
   badges:
   chat_bubbles:
-
+  flutter_pdfview:
+  flutter_cached_pdfview:
+  syncfusion_flutter_pdfviewer:
 dev_dependencies:
   flutter_test:
     sdk: flutter
