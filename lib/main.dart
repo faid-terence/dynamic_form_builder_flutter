@@ -3,6 +3,7 @@ import 'package:dynamic_form_generator/provider/certificates_provider.dart';
 import 'package:dynamic_form_generator/provider/updates_provider.dart';
 import 'package:dynamic_form_generator/screens/certificates_screen.dart';
 import 'package:dynamic_form_generator/screens/form_builder_demo.dart';
+import 'package:dynamic_form_generator/screens/main_screen.dart';
 import 'package:dynamic_form_generator/screens/make_payments.dart';
 import 'package:dynamic_form_generator/screens/mutuelle_application.dart';
 import 'package:dynamic_form_generator/screens/payment_methods.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
-      home: const PdfViewTerence(),
+      home: const MainScreen(),
       routes: {
         "/ ": (context) => const FormBuilderDemo(),
         "/mutuelle": (context) => const MutuelleApplication(),
