@@ -7,7 +7,7 @@ class CertificatesProvider extends ChangeNotifier {
       title: "Birth Certificate",
       imagePath: "assets/images/birthcert.png",
       description: "Click here to view it",
-      pdfPath: "assets/pdf/birthcert.pdf",
+      pdfPath: "assets/images/cert.pdf",
     ),
     Certificate(
       title: "Marriage Certificate",
