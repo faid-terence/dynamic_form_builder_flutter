@@ -1,5 +1,6 @@
 import 'package:dynamic_form_generator/components/custom_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SkipAlert extends StatelessWidget {
   final Function()? onSkip;
@@ -18,7 +19,7 @@ class SkipAlert extends StatelessWidget {
       description:
           "If you skip this step, you won’t receive notifications about traffic fines.  You can always add this to your profile later.",
       iconBackgroundColor: const Color(0xFFF77402),
-      icon: Icons.warning,
+      icon: FontAwesomeIcons.exclamation,
       primaryButtonText: "Go back",
       secondaryButtonText: "Skip",
       primaryButtonColor: const Color(0xFF8413F5),

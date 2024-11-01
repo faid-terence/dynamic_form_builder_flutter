@@ -1,3 +1,4 @@
+import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:flutter/material.dart';
 
 class NotificationRender extends StatelessWidget {
@@ -99,56 +100,19 @@ class NotificationRender extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           // Message bubble
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF2F2F7),
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(12),
-                      topRight: const Radius.circular(12),
-                      bottomRight: Radius.circular(hasToPay ? 0 : 12),
-                      bottomLeft: const Radius.elliptical(0, 100),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: message,
-                              style: const TextStyle(
-                                color: Colors.black87,
-                                fontSize: 16,
-                                height: 1.47,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          time,
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (hasToPay) ...[
-                  SizedBox(
-                    width: double.infinity,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BubbleSpecialThree(
+                text: message,
+                color: const Color(0xFFF2F2F7),
+                isSender: false,
+              ),
+              if (hasToPay)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SizedBox(
+                    width: 313,
                     child: ElevatedButton(
                       onPressed: onPayPressed,
                       style: ElevatedButton.styleFrom(
@@ -170,9 +134,8 @@ class NotificationRender extends StatelessWidget {
                       ),
                     ),
                   ),
-                ],
-              ],
-            ),
+                ),
+            ],
           ),
         ],
       ),
