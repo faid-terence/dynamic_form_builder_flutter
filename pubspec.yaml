@@ -39,6 +39,7 @@ dependencies:
   file_picker:
   provider:
   font_awesome_flutter:
+  badges:
 
 dev_dependencies:
   flutter_test:
