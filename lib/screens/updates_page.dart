@@ -1,4 +1,5 @@
 import 'package:dynamic_form_generator/components/list_updates.dart';
+import 'package:dynamic_form_generator/components/notification_render.dart';
 import 'package:dynamic_form_generator/provider/updates_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,21 @@ class UpdatesPage extends StatelessWidget {
               imagePath: updates[index].imagePath,
               notificationCount: updates[index].notificationCount,
               onTap: () {
-                // Handle the tap action here, e.g., navigate to details
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationRender(
+                      title: updates[index].title,
+                      message: updates[index].description,
+                      time: updates[index].time,
+                      emoji: '🎉',
+                      onInfoPressed: () {
+                        // Handle info button press
+                        // You can add specific logic here if needed
+                      },
+                    ),
+                  ),
+                );
               },
             ),
           );
