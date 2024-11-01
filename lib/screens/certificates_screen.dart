@@ -1,4 +1,5 @@
 import 'package:dynamic_form_generator/components/app_bar.dart';
+import 'package:dynamic_form_generator/components/certiificate_holder.dart';
 import 'package:dynamic_form_generator/components/list_of_certificates.dart';
 import 'package:dynamic_form_generator/provider/certificates_provider.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,19 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
           title: certificates[index].title,
           imagePath: certificates[index].imagePath,
           subtitle: certificates[index].description,
-          onTap: () {},
+          onTap: () {
+            // navigate to certificate holder
+            certificatesProvider.setCurrentCertificateIndex(index);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CertificateHolder(
+                  pdfPath: certificates[index].pdfPath,
+                  pdfName: certificates[index].title,
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
