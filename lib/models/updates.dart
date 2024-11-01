@@ -6,7 +6,9 @@ class Updates {
   final String description;
   final Color color;
   final String time;
-  final int notificationCount; // New property
+  final int notificationCount;
+  final bool hasToPay;
+  final String paymentLink;
 
   Updates({
     required this.title,
@@ -14,6 +16,8 @@ class Updates {
     required this.description,
     required this.color,
     required this.time,
-    this.notificationCount = 0, // Default value for notification count
+    this.notificationCount = 0,
+    this.hasToPay = false,
+    this.paymentLink = "",
   });
 }

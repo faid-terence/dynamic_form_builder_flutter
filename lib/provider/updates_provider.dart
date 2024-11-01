@@ -6,11 +6,12 @@ class UpdatesProvider extends ChangeNotifier {
     Updates(
       title: "Traffic Fines",
       description:
-          "Your traffic fine of 25,000 RWF has been successfully paid.",
+          "You have received a traffic fine of 25,000 RWF\n\nOffense: Over speeding\nSpeed: 68 KMH\nWhere: Nyarutarama, Green Hills\nPay Before: 25/02/2024 08:00PM",
       imagePath: "assets/images/Icon.png",
       color: const Color.fromARGB(255, 255, 174, 0),
       time: "15:00",
       notificationCount: 1,
+      hasToPay: true,
     ),
     Updates(
       title: "Mutuelle de santé",
@@ -20,6 +21,7 @@ class UpdatesProvider extends ChangeNotifier {
       color: const Color.fromARGB(255, 85, 38, 93),
       time: "20:00",
       notificationCount: 1,
+      hasToPay: true,
     ),
     Updates(
       title: "Birth Certificate",
@@ -37,6 +39,15 @@ class UpdatesProvider extends ChangeNotifier {
       imagePath: "assets/images/drive.png",
       color: const Color.fromARGB(255, 255, 174, 0),
       time: "14:00",
+      notificationCount: 1,
+    ),
+    Updates(
+      title: "Traffic Fines",
+      description:
+          "Your traffic fine is due soon.\nPay by 25/02/2024 08:00PM to avoid late fees.",
+      imagePath: "assets/images/Icon.png",
+      color: const Color.fromARGB(255, 255, 174, 0),
+      time: "15:00",
       notificationCount: 1,
     ),
   ];

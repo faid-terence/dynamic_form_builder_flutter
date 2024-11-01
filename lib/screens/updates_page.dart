@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UpdatesPage extends StatelessWidget {
-  const UpdatesPage({super.key});
+  final int notificationCount;
+
+  const UpdatesPage({super.key, required this.notificationCount});
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +40,10 @@ class UpdatesPage extends StatelessWidget {
                       title: updates[index].title,
                       message: updates[index].description,
                       time: updates[index].time,
-                      emoji: '🎉',
-                      onInfoPressed: () {
-                        // Handle info button press
-                        // You can add specific logic here if needed
-                      },
+                      hasToPay: updates[index].hasToPay,
+                      paymentLink: updates[index].paymentLink,
+                      onInfoPressed: () {},
+                      onPayPressed: () {},
                     ),
                   ),
                 );
