@@ -1,8 +1,10 @@
+import 'package:dynamic_form_generator/provider/updates_provider.dart';
 import 'package:dynamic_form_generator/screens/main_screen.dart';
 import 'package:dynamic_form_generator/screens/profile_page.dart';
 import 'package:dynamic_form_generator/screens/updates_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -22,26 +24,34 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final updatesProvider = Provider.of<UpdatesProvider>(context);
+    final notificationCount = updatesProvider.getUpdates().length;
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         selectedItemColor: Colors.black,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
               icon: Icon(Icons.grid_view_outlined), label: "Home"),
           BottomNavigationBarItem(
               icon: Badge(
-                label: Text('4'),
-                child: Icon(FontAwesomeIcons.comments),
+                label: Text(notificationCount.toString()),
+                child: const Icon(FontAwesomeIcons.comments),
               ),
               label: "Update"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [MainScreen(), UpdatesPage(), ProfilePage()],
+        children: [
+          const MainScreen(),
+          UpdatesPage(notificationCount: notificationCount),
+          const ProfilePage()
+        ],
       ),
     );
   }

@@ -5,15 +5,21 @@ class NotificationRender extends StatelessWidget {
   final String message;
   final String time;
   final String emoji;
+  final bool hasToPay;
+  final String paymentLink;
   final VoidCallback? onInfoPressed;
+  final VoidCallback? onPayPressed;
 
   const NotificationRender({
     super.key,
     required this.title,
     required this.message,
     required this.time,
-    this.emoji = "🎉",
+    this.emoji = "  d",
+    this.hasToPay = true,
+    this.paymentLink = "",
     this.onInfoPressed,
+    this.onPayPressed,
   });
 
   @override
@@ -95,47 +101,77 @@ class NotificationRender extends StatelessWidget {
           // Message bubble
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF2F2F7),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "$emoji ",
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        TextSpan(
-                          text: message,
-                          style: const TextStyle(
-                            color: Colors.black87,
-                            fontSize: 16,
-                            height: 1.47,
-                          ),
-                        ),
-                      ],
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF2F2F7),
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(12),
+                      topRight: const Radius.circular(12),
+                      bottomRight: Radius.circular(hasToPay ? 0 : 12),
+                      bottomLeft: const Radius.elliptical(0, 100),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      time,
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 13,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: message,
+                              style: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 16,
+                                height: 1.47,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          time,
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (hasToPay) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: onPayPressed,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE6DDF7),
+                        foregroundColor: const Color(0xFF9747FF),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(12),
+                          ),
+                        ),
+                      ),
+                      child: const Text(
+                        'Pay Now',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),
                 ],
-              ),
+              ],
             ),
           ),
         ],
