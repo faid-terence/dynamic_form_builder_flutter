@@ -5,7 +5,7 @@ class Updates {
   final String description;
   final String imagePath;
   final Color color;
-  final String time;
+  final DateTime date;
   int notificationCount;
   final bool hasToPay;
   final String? paymentLink;
@@ -15,7 +15,7 @@ class Updates {
     required this.description,
     required this.imagePath,
     required this.color,
-    required this.time,
+    required this.date,
     this.notificationCount = 0,
     this.hasToPay = false,
     this.paymentLink,

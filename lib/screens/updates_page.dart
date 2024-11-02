@@ -45,7 +45,7 @@ class UpdatesPage extends StatelessWidget {
               return ListUpdates(
                 title: title,
                 description: update.description,
-                time: update.time,
+                date: update.date,
                 iconBackgroundColor: update.color,
                 imagePath: update.imagePath,
                 notificationCount: totalCount,
@@ -56,7 +56,8 @@ class UpdatesPage extends StatelessWidget {
                       builder: (context) => NotificationRender(
                         title: title,
                         message: update.description,
-                        time: update.time,
+                        date: update
+                            .date, // Removed toString() since NotificationRender expects DateTime
                         hasToPay: update.hasToPay,
                         paymentLink: update.paymentLink ?? "",
                         onInfoPressed: () {},

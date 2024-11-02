@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ListUpdates extends StatelessWidget {
   final String title;
   final String description;
   final Color iconBackgroundColor;
   final String imagePath;
-  final String time;
+  final DateTime date;
   final int notificationCount;
   final VoidCallback onTap;
 
@@ -15,10 +16,25 @@ class ListUpdates extends StatelessWidget {
     required this.description,
     required this.iconBackgroundColor,
     required this.imagePath,
-    required this.time,
+    required this.date,
     this.notificationCount = 0,
     required this.onTap,
   });
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays == 0) {
+      return DateFormat('HH:mm').format(date);
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
+    } else if (difference.inDays < 7) {
+      return DateFormat('EEEE').format(date);
+    } else {
+      return DateFormat('dd/MM/yyyy').format(date);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +94,7 @@ class ListUpdates extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      time,
+                      _formatDate(date),
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
