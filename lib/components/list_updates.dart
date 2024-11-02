@@ -107,8 +107,7 @@ class ListUpdates extends StatelessWidget {
               ],
             ),
             Container(
-              margin: const EdgeInsets.only(
-                  left: 62, top: 8), // 50 (image width) + 12 (SizedBox width)
+              margin: const EdgeInsets.only(left: 62, top: 8),
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(color: Colors.grey.shade300),

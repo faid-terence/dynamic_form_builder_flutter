@@ -25,7 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     final updatesProvider = Provider.of<UpdatesProvider>(context);
-    final notificationCount = updatesProvider.getUpdates().length;
+    final notificationCount = updatesProvider.getTotalNotificationCount();
 
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(

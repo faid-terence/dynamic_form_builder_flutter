@@ -107,7 +107,7 @@ class NotificationRender extends StatelessWidget {
                 text: message,
                 color: const Color(0xFFF2F2F7),
                 isSender: false,
-                tail: !hasToPay ,
+                tail: !hasToPay,
               ),
               if (hasToPay)
                 Padding(

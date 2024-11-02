@@ -1,5 +1,6 @@
 import 'package:dynamic_form_generator/components/list_updates.dart';
 import 'package:dynamic_form_generator/components/notification_render.dart';
+import 'package:dynamic_form_generator/models/updates.dart';
 import 'package:dynamic_form_generator/provider/updates_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,34 +24,51 @@ class UpdatesPage extends StatelessWidget {
       body: Consumer<UpdatesProvider>(
         builder: (context, provider, child) {
           final updates = provider.getUpdates();
+
+          // Group updates by title
+          final groupedUpdates = <String, List<dynamic>>{};
+          for (var update in updates) {
+            if (!groupedUpdates.containsKey(update.title)) {
+              groupedUpdates[update.title] = [update, update.notificationCount];
+            } else {
+              groupedUpdates[update.title]![1] += update.notificationCount;
+            }
+          }
+
           return ListView.builder(
-            itemCount: updates.length,
-            itemBuilder: (context, index) => ListUpdates(
-              title: updates[index].title,
-              description: updates[index].description,
-              time: updates[index].time,
-              iconBackgroundColor: updates[index].color,
-              imagePath: updates[index].imagePath,
-              notificationCount: updates[index].notificationCount,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NotificationRender(
-                      title: updates[index].title,
-                      message: updates[index].description,
-                      time: updates[index].time,
-                      hasToPay: updates[index].hasToPay,
-                      paymentLink: updates[index].paymentLink,
-                      onInfoPressed: () {},
-                      onPayPressed: () {},
+            itemCount: groupedUpdates.length,
+            itemBuilder: (context, index) {
+              final title = groupedUpdates.keys.elementAt(index);
+              final update = groupedUpdates[title]![0] as Updates;
+              final totalCount = groupedUpdates[title]![1];
+
+              return ListUpdates(
+                title: title,
+                description: update.description,
+                time: update.time,
+                iconBackgroundColor: update.color,
+                imagePath: update.imagePath,
+                notificationCount: totalCount,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NotificationRender(
+                        title: title,
+                        message: update.description,
+                        time: update.time,
+                        hasToPay: update.hasToPay,
+                        paymentLink: update.paymentLink ?? "",
+                        onInfoPressed: () {},
+                        onPayPressed: () {},
+                      ),
                     ),
-                  ),
-                );
-                // set notification count to read
-                provider.setNotificationCount(index, 0);
-              },
-            ),
+                  );
+                  // set notification count to read permanently
+                  provider.setNotificationCountByTitle(title, 0);
+                },
+              );
+            },
           );
         },
       ),
