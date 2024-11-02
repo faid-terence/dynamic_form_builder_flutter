@@ -122,7 +122,12 @@ class NotificationRender extends StatelessWidget {
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: onPayPressed,
+                          onTap: () {
+                            if (paymentLink.isNotEmpty) {
+                              Navigator.pushNamed(context, paymentLink);
+                            }
+                            onPayPressed?.call();
+                          },
                           customBorder: const BubbleButtonBorder(),
                           child: const Center(
                             child: Text(

@@ -1,4 +1,3 @@
-import 'package:dynamic_form_generator/components/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';

@@ -6,7 +6,7 @@ class Updates {
   final String description;
   final Color color;
   final String time;
-  final int notificationCount;
+  int notificationCount;
   final bool hasToPay;
   final String paymentLink;
 

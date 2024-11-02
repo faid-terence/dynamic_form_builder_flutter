@@ -47,6 +47,8 @@ class UpdatesPage extends StatelessWidget {
                     ),
                   ),
                 );
+                // set notification count to read
+                provider.setNotificationCount(index, 0);
               },
             ),
           );
