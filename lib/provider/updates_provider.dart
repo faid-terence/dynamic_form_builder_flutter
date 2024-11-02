@@ -23,6 +23,7 @@ class UpdatesProvider extends ChangeNotifier {
       time: "20:00",
       notificationCount: 1,
       hasToPay: true,
+      paymentLink: "/mutuelle",
     ),
     Updates(
       title: "Birth Certificate",
@@ -62,6 +63,11 @@ class UpdatesProvider extends ChangeNotifier {
 
   void setCurrentUpdateIndex(int index) {
     currentUpdateIndex = index;
+    notifyListeners();
+  }
+
+  void setNotificationCount(int index, int count) {
+    updates[index].notificationCount = count;
     notifyListeners();
   }
 }
