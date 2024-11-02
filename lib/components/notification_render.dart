@@ -6,7 +6,7 @@ import 'package:dynamic_form_generator/provider/updates_provider.dart';
 class NotificationRender extends StatelessWidget {
   final String title;
   final String message;
-  final String time;
+  final DateTime date;
   final bool hasToPay;
   final String? paymentLink;
   final VoidCallback? onInfoPressed;
@@ -16,7 +16,7 @@ class NotificationRender extends StatelessWidget {
     super.key,
     required this.title,
     required this.message,
-    required this.time,
+    required this.date,
     this.hasToPay = false,
     this.paymentLink,
     this.onInfoPressed,
@@ -28,7 +28,8 @@ class NotificationRender extends StatelessWidget {
     return Consumer<UpdatesProvider>(
       builder: (context, provider, child) {
         final updates = provider.getUpdatesByTitle(title)
-          ..sort((a, b) => _parseTime(b.time).compareTo(_parseTime(a.time)));
+          ..sort((a, b) => _parseTime(b.date.toString())
+              .compareTo(_parseTime(a.date.toString())));
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -115,7 +116,7 @@ class NotificationRender extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.only(left: 12, bottom: 8),
                                 child: Text(
-                                  update.time,
+                                  update.date.toString(),
                                   style: TextStyle(
                                     color: Colors.grey.shade600,
                                     fontSize: 12,
