@@ -1,13 +1,14 @@
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:dynamic_form_generator/provider/updates_provider.dart';
 
 class NotificationRender extends StatelessWidget {
   final String title;
   final String message;
   final String time;
-  final String emoji;
   final bool hasToPay;
-  final String paymentLink;
+  final String? paymentLink;
   final VoidCallback? onInfoPressed;
   final VoidCallback? onPayPressed;
 
@@ -16,139 +17,186 @@ class NotificationRender extends StatelessWidget {
     required this.title,
     required this.message,
     required this.time,
-    this.emoji = "  d",
-    this.hasToPay = true,
-    this.paymentLink = "",
+    this.hasToPay = false,
+    this.paymentLink,
     this.onInfoPressed,
     this.onPayPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, size: 20),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          color: Colors.black,
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.info_outline_rounded,
-              size: 22,
+    return Consumer<UpdatesProvider>(
+      builder: (context, provider, child) {
+        final updates = provider.getUpdatesByTitle(title)
+          ..sort((a, b) => _parseTime(b.time).compareTo(_parseTime(a.time)));
+
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            title: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, size: 20),
+              onPressed: () => Navigator.pop(context),
               color: Colors.black,
             ),
-            onPressed: onInfoPressed,
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: Colors.grey.shade200,
-            height: 0.5,
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-          // Yesterday divider
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 0.5,
-                    color: Colors.grey.shade300,
-                  ),
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.info_outline_rounded,
+                  size: 22,
+                  color: Colors.black,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    'Yesterday',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    height: 0.5,
-                    color: Colors.grey.shade300,
-                  ),
-                ),
-              ],
+                onPressed: onInfoPressed,
+              ),
+            ],
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(1.0),
+              child: Container(
+                color: Colors.grey.shade200,
+                height: 0.5,
+              ),
             ),
           ),
-          const SizedBox(height: 16),
-          // Message bubble and button
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          body: ListView(
             children: [
-              BubbleSpecialThree(
-                text: message,
-                color: const Color(0xFFF2F2F7),
-                isSender: false,
-                tail: !hasToPay,
-              ),
-              if (hasToPay)
-                Padding(
-                  padding: const EdgeInsets.only(left: 0, right: 90),
-                  child: CustomPaint(
-                    painter: BubbleButtonPainter(
-                      color: const Color(0xFFE6DDF7),
+              const SizedBox(height: 16),
+              // Yesterday divider
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 0.5,
+                        color: Colors.grey.shade300,
+                      ),
                     ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            if (paymentLink.isNotEmpty) {
-                              Navigator.pushNamed(context, paymentLink);
-                            }
-                            onPayPressed?.call();
-                          },
-                          customBorder: const BubbleButtonBorder(),
-                          child: const Center(
-                            child: Text(
-                              'Pay Now',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF9747FF),
-                              ),
-                            ),
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        'Yesterday',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
-                  ),
+                    Expanded(
+                      child: Container(
+                        height: 0.5,
+                        color: Colors.grey.shade300,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              const SizedBox(height: 16),
+              // Messages
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: updates
+                      .map((update) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Time stamp
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 12, bottom: 8),
+                                child: Text(
+                                  update.time,
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              // Message bubble
+                              BubbleSpecialThree(
+                                text: update.description,
+                                color: const Color(0xFFF2F2F7),
+                                isSender: false,
+                                tail: !update.hasToPay,
+                              ),
+                              // Pay Now button if required
+                              if (update.hasToPay)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 0, right: 90, bottom: 24),
+                                  child: CustomPaint(
+                                    painter: BubbleButtonPainter(
+                                      color: const Color(0xFFE6DDF7),
+                                    ),
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      height: 50,
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          onTap: () {
+                                            if (update
+                                                    .paymentLink?.isNotEmpty ??
+                                                false) {
+                                              Navigator.pushNamed(
+                                                  context, update.paymentLink!);
+                                            }
+                                            onPayPressed?.call();
+                                          },
+                                          customBorder:
+                                              const BubbleButtonBorder(),
+                                          child: const Center(
+                                            child: Text(
+                                              'Pay Now',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xFF9747FF),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              const SizedBox(height: 16),
+                            ],
+                          ))
+                      .toList(),
+                ),
+              ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
+  }
+
+  DateTime _parseTime(String time) {
+    try {
+      final parts = time.split(':');
+      final now = DateTime.now();
+      return DateTime(
+        now.year,
+        now.month,
+        now.day,
+        int.parse(parts[0]),
+        int.parse(parts[1]),
+      );
+    } catch (e) {
+      return DateTime.now();
+    }
   }
 }
 
