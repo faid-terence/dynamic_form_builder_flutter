@@ -3,7 +3,7 @@ import 'package:dynamic_form_generator/models/updates.dart';
 import 'package:flutter/foundation.dart';
 
 class UpdatesProvider extends ChangeNotifier {
-  static List<Updates> updates = [
+  static final List<Updates> _updates = [
     Updates(
       title: "Traffic Fines",
       description:
@@ -35,6 +35,15 @@ class UpdatesProvider extends ChangeNotifier {
       notificationCount: 1,
     ),
     Updates(
+      title: "Birth Certificate",
+      description:
+          "🎉 Your request for the birth certificate has been approved, we will send it to you by tomorrow.",
+      imagePath: "assets/images/birthcert.png",
+      color: const Color.fromARGB(255, 255, 174, 0),
+      time: "12:00",
+      notificationCount: 1,
+    ),
+    Updates(
       title: "Definitive Driving Test",
       description:
           "Your definitive driving test is on Tuesday, May 04.\n \nHere is your registration code:\n123456789034567",
@@ -55,7 +64,28 @@ class UpdatesProvider extends ChangeNotifier {
   ];
 
   List<Updates> getUpdates() {
-    return updates;
+    return _updates;
+  }
+
+  // Add this method to get all updates with the same title
+  List<Updates> getUpdatesByTitle(String title) {
+    return _updates.where((update) => update.title == title).toList();
+  }
+
+  // Method to add a new update
+  void addUpdate(Updates update) {
+    _updates.add(update);
+    notifyListeners();
+  }
+
+  // Method to mark all notifications of a title as read
+  void setNotificationCountByTitle(String title, int count) {
+    for (var update in _updates) {
+      if (update.title == title) {
+        update.notificationCount = count;
+      }
+    }
+    notifyListeners();
   }
 
   // go to service screen
@@ -67,7 +97,11 @@ class UpdatesProvider extends ChangeNotifier {
   }
 
   void setNotificationCount(int index, int count) {
-    updates[index].notificationCount = count;
+    _updates[index].notificationCount = count;
     notifyListeners();
+  }
+
+  int getTotalNotificationCount() {
+    return _updates.fold(0, (sum, update) => sum + update.notificationCount);
   }
 }
