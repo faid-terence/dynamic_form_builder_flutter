@@ -16,7 +16,9 @@ class OnBoardingScreenTwo extends StatelessWidget {
           "Handle all your payments like traffic fines in one place. Simple, fast, and secure.",
       buttonText: "Get Started",
       skipButtonText: "Back",
-      onButtonPressed: () {},
+      onButtonPressed: () {
+        Navigator.pushNamed(context, "/vehicleOwnership");
+      },
       onSkipPressed: () {
         Navigator.push(
           context,

@@ -32,7 +32,9 @@ class OnBoardingScreenOne extends StatelessWidget {
           ),
         );
       },
-      onSkipPressed: () {},
+      onSkipPressed: () {
+        Navigator.pushNamed(context, "/vehicleOwnership");
+      },
       isActive: true,
     );
   }
