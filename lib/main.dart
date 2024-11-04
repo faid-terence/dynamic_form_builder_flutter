@@ -5,7 +5,9 @@ import 'package:dynamic_form_generator/screens/form_builder_demo.dart';
 
 import 'package:dynamic_form_generator/screens/make_payments.dart';
 import 'package:dynamic_form_generator/screens/mutuelle_application.dart';
-import 'package:dynamic_form_generator/screens/onboarding_screen.dart';
+import 'package:dynamic_form_generator/components/onboarding_screen.dart';
+import 'package:dynamic_form_generator/screens/on_boarding_screen_one.dart';
+import 'package:dynamic_form_generator/screens/on_boarding_screen_two.dart';
 import 'package:dynamic_form_generator/screens/payment_methods.dart';
 import 'package:dynamic_form_generator/screens/user_payments.dart';
 import 'package:dynamic_form_generator/screens/vehicle_ownership.dart';
@@ -43,7 +45,7 @@ class MyApp extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
-      home: const OnboardingScreen(),
+      home: const OnBoardingScreenOne(),
       routes: {
         "/ ": (context) => const FormBuilderDemo(),
         "/mutuelle": (context) => const MutuelleApplication(),
@@ -51,6 +53,8 @@ class MyApp extends StatelessWidget {
         "/UserPayments": (context) => const UserPayments(),
         "/makePayments": (context) => const MakePayments(),
         "/certificates": (context) => const CertificatesScreen(),
+        "/onboarding1": (context) => const OnBoardingScreenOne(),
+        "/onboarding2": (context) => const OnBoardingScreenTwo(),
       },
     );
   }
