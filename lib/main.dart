@@ -9,6 +9,7 @@ import 'package:dynamic_form_generator/screens/on_boarding_screen_one.dart';
 import 'package:dynamic_form_generator/screens/on_boarding_screen_two.dart';
 import 'package:dynamic_form_generator/screens/payment_methods.dart';
 import 'package:dynamic_form_generator/screens/user_payments.dart';
+import 'package:dynamic_form_generator/screens/vehicle_ownership.dart';
 import 'package:flutter/material.dart';
 import 'package:dynamic_form_generator/provider/form_state_provider.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         "/certificates": (context) => const CertificatesScreen(),
         "/onboarding1": (context) => const OnBoardingScreenOne(),
         "/onboarding2": (context) => const OnBoardingScreenTwo(),
+        "/vehicleOwnership": (context) => const VehicleOwnership(),
       },
     );
   }
