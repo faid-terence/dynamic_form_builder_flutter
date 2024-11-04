@@ -1,3 +1,4 @@
+import 'package:dynamic_form_generator/screens/on_boarding_screen_two.dart';
 import 'package:dynamic_form_generator/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,21 @@ class OnBoardingScreenOne extends StatelessWidget {
       buttonText: "Next",
       skipButtonText: "Skip",
       onButtonPressed: () {
-        Navigator.pushNamed(context, "/onboarding2");
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const OnBoardingScreenTwo(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300),
+          ),
+        );
       },
       onSkipPressed: () {},
       isActive: true,
