@@ -5,6 +5,7 @@ import 'package:dynamic_form_generator/screens/form_builder_demo.dart';
 
 import 'package:dynamic_form_generator/screens/make_payments.dart';
 import 'package:dynamic_form_generator/screens/mutuelle_application.dart';
+import 'package:dynamic_form_generator/screens/onboarding_screen.dart';
 import 'package:dynamic_form_generator/screens/payment_methods.dart';
 import 'package:dynamic_form_generator/screens/user_payments.dart';
 import 'package:dynamic_form_generator/screens/vehicle_ownership.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
-      home: const VehicleOwnership(),
+      home: const OnboardingScreen(),
       routes: {
         "/ ": (context) => const FormBuilderDemo(),
         "/mutuelle": (context) => const MutuelleApplication(),
